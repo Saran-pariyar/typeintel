@@ -1,0 +1,35 @@
+#this is not version of our app, it's versoin of docker yaml file's syntax we're going to use
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+      #watch changes for the package.json
+        - path: ./package.json
+        #rebuild image if changes in package.json
+          action: rebuild
+
+        #rebuild procedure for nexxt config too
+        - path: ./next.config.js 
+          action: rebuild
+
+        - path: ./package-lock.json 
+          action: rebuild
+
+        #finally add path for all other files
+        - path: .
+          target: /app
+          action: sync
+
+    environment:
+      - DB_URL= "write mongodb url"
+
+#specify volumes of tasked
+volumes:
+  tasked:
